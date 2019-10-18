@@ -10,12 +10,19 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AnalyzerTestBase extends TestCase {
 
+    protected $tmpDir;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->tmpDir = sys_get_temp_dir() . '/phpstan' . time();
+    }
+
     protected function runAnalyze(string $path) {
         $rootDir = __DIR__ . '/../fixtures/drupal';
-        $tmpDir = sys_get_temp_dir() . '/' . time() . 'phpstan';
         $containerFactory = new ContainerFactory($rootDir);
         $container = $containerFactory->create(
-            $tmpDir,
+            $this->tmpDir,
             [__DIR__ . '/../fixtures/config/phpunit-drupal-phpstan.neon'],
             []
         );
